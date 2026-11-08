@@ -13,6 +13,7 @@ Status: work in progress.
 - Kubernetes manifests (Deployment, Service) tested on a local minikube cluster
 - CI workflow that runs the tests on push and pull request
 - GitHub Actions workflow that runs the reviewer on pull requests and posts the result as a comment
+- GitHub Actions workflow that builds the Docker image and publishes it to GitHub Container Registry on every push to `main` (linux/amd64 only)
 
 ## Run it
 ```bash
@@ -35,6 +36,12 @@ Run with Docker:
 docker build -t pr-review-bot .
 docker run --env-file .env -p 8000:8000 pr-review-bot
 ```
+
+Pull the published image:
+```bash
+docker pull --platform linux/amd64 ghcr.io/wasd-su65/pr-review-bot:latest
+```
+The image is built for linux/amd64 only. On Apple Silicon, `--platform linux/amd64` runs it under emulation.
 
 Run on Kubernetes (minikube):
 ```bash

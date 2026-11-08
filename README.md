@@ -10,6 +10,7 @@ Status: work in progress.
 - Unit tests that run without calling the real API (`pytest`)
 - HTTP service with FastAPI: `GET /health` and `POST /review`
 - Docker image (the API key is passed at runtime, not baked into the image)
+- Kubernetes manifests (Deployment, Service) tested on a local minikube cluster
 - CI workflow that runs the tests on push and pull request
 - GitHub Actions workflow that runs the reviewer on pull requests and posts the result as a comment
 
@@ -35,6 +36,18 @@ docker build -t pr-review-bot .
 docker run --env-file .env -p 8000:8000 pr-review-bot
 ```
 
+Run on Kubernetes (minikube):
+```bash
+minikube start --driver=docker
+docker build -t pr-review-bot:local .
+minikube image load pr-review-bot:local
+kubectl create secret generic gemini-api --from-env-file=.env
+kubectl apply -f k8s/
+kubectl port-forward service/pr-review-bot 8080:80
+curl http://localhost:8080/health
+```
+The manifests in `k8s/` define a Deployment (readiness and liveness probes on `/health`, the API key read from a Secret) and a ClusterIP Service. Tested on a local minikube cluster only. `/health` checks that the process is up, not that the Gemini API is reachable.
+
 ## Demo
 On a test pull request with a deliberate bug (`apply_discount` subtracted `percent / 100` instead of a percentage of the price), the bot flagged the wrong formula, the missing input validation and the missing tests.
 
@@ -43,7 +56,6 @@ On a test pull request with a deliberate bug (`apply_discount` subtracted `perce
 The workflow is `.github/workflows/pr-review.yml`. It needs a `GEMINI_API_KEY` repository secret, and it skips pull requests from forks so the secret is not exposed.
 
 ## Not done yet
-- Kubernetes (minikube) deployment
 - A larger set of sample diffs to evaluate prompt changes
 
 ## Notes

@@ -4,7 +4,7 @@ Problems found while building pr-review-bot, what caused them, and what was done
 
 ## 1. `client.interactions` not found
 - **Symptom:** `AttributeError: 'Client' object has no attribute 'interactions'`
-- **Cause:** The sample code from AI Studio "Get code" used a newer API than the SDK installed on Python 3.9.
+- **Likely cause:** The sample code from AI Studio "Get code" used a newer API than the SDK installed on Python 3.9.
 - **Fix:** Switched to `client.models.generate_content`, which works with the installed SDK.
 - **Status:** Worked around. Upgrading Python (3.11+) and using the newer SDK is still open.
 
@@ -25,7 +25,7 @@ Problems found while building pr-review-bot, what caused them, and what was done
 
 ## 5. Embedded git repository
 - **Symptom:** `warning: adding embedded git repository` and a broken folder entry on GitHub.
-- **Cause:** A second `git init` was created inside the project folder.
+- **Likely cause:** A second `git init` was created inside the project folder.
 - **Fix:** Removed the nested repository and recreated the virtual environment at the project root.
 
 ## 6. Prompt padding notes with praise

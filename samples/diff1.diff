@@ -1,0 +1,10 @@
+diff --git a/app/utils.py b/app/utils.py
+--- a/app/utils.py
++++ b/app/utils.py
+@@ -1,6 +1,9 @@
+ def average(numbers):
+-    return sum(numbers) / len(numbers)
++    total = 0
++    for n in numbers:
++        total += n
++    return total / len(numbers)

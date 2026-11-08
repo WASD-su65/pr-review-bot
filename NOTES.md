@@ -38,3 +38,11 @@ Problems found while building pr-review-bot, what caused them, and what was done
 - **Examples:** On the bug sample, one note gave the wrong condition for negative prices. On the "already fine" sample, one note described the change as going from returning a value to raising an exception, although the old code also raised an error (a different one).
 - **Cause:** The model sees only the diff, not the callers or the full code, and can state details wrongly.
 - **Status:** Not fixed. The output should be treated as a hint for a human reviewer, not a verdict. A larger set of sample diffs is planned to check how often this happens.
+
+## 8. Kubernetes health check is shallow
+- **Observation:** The readiness and liveness probes call `/health`, which only shows that the process is running. A pod can be "Ready" while the Gemini API key is wrong or the API is unreachable.
+- **Status:** Not addressed. A deeper check would call the API, which costs quota on every probe, so it was left out.
+
+## 9. Kubernetes tested locally only
+- **Observation:** The manifests were tested on a single local minikube cluster. The image is loaded with `minikube image load`, not pulled from a registry.
+- **Status:** No registry, ingress, autoscaling or multiple replicas.

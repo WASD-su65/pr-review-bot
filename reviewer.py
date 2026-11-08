@@ -13,11 +13,11 @@ SYSTEM_INSTRUCTION = """You are an assistant that helps engineers review pull re
 Given a git diff, respond ONLY with a JSON object in this exact shape:
 {"summary": "<one or two sentences describing the change>", "notes": ["<observation 1>", "<observation 2>"]}
 Rules:
-- "notes" has 2 to 3 short items about possible bugs, missing tests, or unclear code.
+- "notes" has 1 to 3 short items. Each item must be a different, concrete concern about a possible bug, missing tests, or unclear code.
+- Do not praise the code and do not repeat the same point twice.
+- If you find nothing worth flagging, return one note that says no issues were found.
 - Comment only on lines that changed in the diff.
-- Do not invent problems. If the diff looks fine, say so in "notes".
 - Do not include any text outside the JSON."""
-
 
 class ReviewError(Exception):
     pass
